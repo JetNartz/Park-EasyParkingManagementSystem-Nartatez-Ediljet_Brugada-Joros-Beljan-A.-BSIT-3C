@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Parking Management Staff</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- Burger Menu -->
+    <div id="burgerMenu" class="burger-menu">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+    </div>
+
+    <!-- Dropdown Menu -->
+    <div id="dropdownMenu" class="dropdown-menu" style="display: none;">
+        <ul>
+            <li id="homeOption">Home</li>
+            <li id="logOption">Parking Log</li>
+            <li id="logoutOption">Logout</li>
+        </ul>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <h1>Parking Management System</h1>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <h3 id="occupiedSlots">0</h3>
+                <p>Occupied</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="availableSlots">0</h3>
+                <p>Available</p>
+            </div>
+        </div>
+
+        <h2>Parking Layout</h2>
+        <div class="layout">
+            <div class="parking-section">
+                <div class="slot-column" id="col1"></div>
+                <div class="lane">⇅</div>
+                <div class="slot-column" id="col2"></div>
+            </div>
+            <div class="parking-section">
+                <div class="slot-column" id="col3"></div>
+                <div class="lane">⇅</div>
+                <div class="slot-column" id="col4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Parking Log Section -->
+    <div id="parkingLogContainer" style="display: none;">
+        <div class="log-container">
+            <div class="log-header">
+                <h2>Parking Log</h2>
+                <input type="text" id="searchInput" class="search-bar" placeholder="Search by Plate Number or Vehicle Name">
+            </div>
+            <!-- Added scrollable wrapper here -->
+    <div class="log-table-wrapper">
+      <table class="log-table" id="logTable">
+        <thead>
+          <tr>
+            <th>Slot</th>
+            <th>Valid Sticker</th>
+            <th>Vehicle Type</th>
+            <th>Vehicle Name</th>
+            <th>Plate Number</th>
+            <th>Time In</th>
+            <th>Time Out</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+    <!-- Parking Modal -->
+    <div id="parkingModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Parking Slot Management</h3>
+                <div class="slot-info">
+                    <strong>Slot: <span id="selectedSlot"></span></strong>
+                </div>
+            </div>
+            
+            <form id="parkingForm">
+                <div class="form-group">
+                    <label for="carType">Vehicle Type:</label>
+                    <select id="carType" required>
+                        <option value="">Select Vehicle Type</option>
+                        <option value="Light Vehicle">Light Vehicle</option>
+                        <option value="Motorcycle">Motorcycle</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="validSticker">Valid Sticker:</label>
+                    <select id="validSticker" required>
+                        <option value="">Select Sticker Status</option>
+                        <option value="With Valid Sticker">With Valid Sticker</option>
+                        <option value="Without Valid Sticker">Without Valid Sticker</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="vehicleName">Vehicle Name:</label>
+                    <input type="text" id="vehicleName" placeholder="Enter vehicle name" required />
+                </div>
+                
+                <div class="form-group">
+                    <label for="plateNumber">Plate Number:</label>
+                    <input type="text" id="plateNumber" placeholder="Enter plate number" maxlength="8" required />
+                </div>
+                
+                <div class="form-group">
+                    <label for="timeIn">Time In:</label>
+                    <input type="datetime-local" id="timeIn" required />
+                </div>
+                
+                <div class="form-group" id="timeOutGroup" style="display: none;">
+                    <label for="timeOut">Time Out:</label>
+                    <input type="datetime-local" id="timeOut" />
+                </div>
+                
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">Park Vehicle</button>
+                </div>
+                
+                <button type="button" class="btn btn-checkout" id="checkoutBtn" style="display: none;" onclick="checkoutVehicle()">
+                    Check Out Vehicle
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Checkout Summary Modal -->
+  <div id="checkoutSummaryModal" class="summary-modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Vehicle Checkout Summary</h3>
+      </div>
+      <div class="summary-content">
+        <p><strong>Slot:</strong> <span id="summarySlot">--</span></p>
+        <p><strong>Vehicle Type:</strong> <span id="summaryVehicleType">--</span></p>
+        <p><strong>Vehicle Name:</strong> <span id="summaryVehicleName">--</span></p>
+        <p><strong>Plate Number:</strong> <span id="summaryPlate">--</span></p>
+        <p><strong>Time In:</strong> <span id="summaryTimeIn">--</span></p>
+        <p><strong>Time Out:</strong> <span id="summaryTimeOut">--</span></p>
+        <p><strong>Hours Parked:</strong> <span id="summaryHours">--</span></p>
+        <p><strong>Total Fee:</strong> <span id="summaryFee">--</span></p>
+      </div>
+      <div class="button-group">
+        <button class="btn btn-primary" onclick="closeSummaryModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+    <script src="script.js"></script>
+    <script>
+logoutOption.addEventListener("click", () => {
+  dropdownMenu.style.display = "none";
+  mainContainer.style.display = "none";
+  logContainer.style.display = "none";
+  window.location.href = "ParkingSystemLogIn.html";
+});
+</script>
+
+</body>
+</html>

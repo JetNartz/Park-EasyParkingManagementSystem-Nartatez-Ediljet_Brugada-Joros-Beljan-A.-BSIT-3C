@@ -1,0 +1,868 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: #009e60; /* Removed gradient */
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    position: relative;
+    display: block;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #4a5568;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #2d3748;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    border-bottom: 3px solid #000000;
+    padding-bottom: 10px;
+}
+
+.layout {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 40px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.parking-section {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.slot-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.lane {
+    width: 80px;
+    height: 300px;
+    background: linear-gradient(45deg, #f7fafc, #edf2f7);
+    border: 3px dashed #a0aec0;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    color: #4a5568;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.slot {
+    width: 100px;
+    height: 60px;
+    background: #48bb78;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.slot:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.slot.occupied {
+    background: #e53e3e;
+}
+
+.slot.occupied::before {
+    content: '🚗';
+    font-size: 20px;
+}
+
+.slot:not(.occupied)::before {
+    content: 'EMPTY';
+    font-size: 10px;
+}
+
+.log-section {
+    margin-top: 40px;
+}
+
+.log-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.log-table th {
+    background: #00b141fd;
+    color: rgba(0, 0, 0, 0.74);
+    padding: 15px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.log-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.log-table tr:nth-child(even) {
+    background-color: #f7fafc;
+}
+
+.log-table tr:hover {
+    background-color: #edf2f7;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: #2d3748;
+    margin: 5% auto;
+    padding: 50px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    height: 90%;
+    color: white;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.modal-header h3 {
+    font-size: 1.8em;
+    margin-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #e2e8f0;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.form-group input::placeholder {
+    color: #a0aec0;
+}
+
+.form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: #434650;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.form-group select option {
+    background: #2d3748;
+    color: white;
+}
+
+.button-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: #48bb78;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #2f855a;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: #e53e3e;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #9c2626;
+    transform: translateY(-2px);
+}
+
+.btn-checkout {
+    background: #ed8936;
+    color: white;
+    margin-top: 10px;
+}
+
+.btn-checkout:hover {
+    background: #c05621;
+    transform: translateY(-2px);
+}
+
+.slot-info {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.stat-card {
+    background: #66c49f;
+    color: #000000b6;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    flex: 1;
+    min-width: 150px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card h3 {
+    font-size: 2em;
+    margin-bottom: 5px;
+}
+
+.stat-card p {
+    font-size: 1.1em;
+    opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+    .layout {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .parking-section {
+        margin-bottom: 20px;
+    }
+    
+    .modal-content {
+        margin: 10% auto;
+        width: 95%;
+    }
+}
+
+/* Burger Menu */
+.burger-menu {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 40px;
+    height: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.burger-menu .line {
+    width: 100%;
+    height: 4px;
+    background-color: #333;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.burger-menu:hover .line {
+    background-color: #48bb78;
+}
+
+/* Admin Burger Menu */
+.Admin-burger-menu {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 40px;
+    height: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.Admin-burger-menu .line {
+    width: 100%;
+    height: 4px;
+    background-color: #333;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.Admin-burger-menu:hover .line {
+    background-color: #48bb78;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    position: absolute;
+    top: 70px;
+    left: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    width: 150px;
+    padding: 10px 0;
+}
+
+.dropdown-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dropdown-menu li {
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-menu li:hover {
+    background-color: #f0f0f0;
+}
+
+/* Admin Dropdown Menu */
+.Admin-dropdown-menu {
+    display: none; /* Ensure it is hidden by default */
+    position: absolute;
+    top: 70px;
+    left: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    width: 150px;
+    padding: 10px 0;
+}
+
+.Admin-dropdown-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.Admin-dropdown-menu li {
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    transition: background-color 0.3s ease;
+}
+
+.Admin-dropdown-menu li:hover {
+    background-color: #f0f0f0;
+}
+
+/* Parking Log Container */
+.log-container {
+    margin-top: 40px;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.log-header h2 {
+    margin: 0;
+    font-size: 1.8em;
+    color: #2d3748;
+    border-bottom: 3px solid #000000;
+    padding-bottom: 5px;
+}
+
+/* Search bar */
+.search-bar {
+    padding: 10px 15px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 250px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar:focus {
+    outline: none;
+    border-color: #00b141;
+    box-shadow: 0 0 6px rgba(0, 177, 65, 0.5);
+}
+
+/* Parking Log Table */
+.log-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.log-table th {
+    background: #66c49f;
+    color: rgba(0, 0, 0, 0.85);
+    padding: 14px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.log-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.log-table tr:nth-child(even) {
+    background-color: #f7fafc;
+}
+
+.log-table tr:hover {
+    background-color: #edf2f7;
+}
+
+/* Fix for search filtering */
+#logTable tbody tr {
+    display: table-row;
+}
+
+#logTable tbody tr.hidden {
+    display: none !important;
+}
+
+.status {
+    font-weight: bold;
+    padding: 6px 10px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.status-occupied {
+    color: #fff;
+    background-color: #e53e3e;
+}
+
+.status-checkedout {
+    color: #fff;
+    background-color: #38a169;
+}
+
+/* Summary Modal Layout */
+.summary-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.summary-modal .modal-content {
+  background: #2d3748;
+  border-radius: 10px;
+  width: 380px;
+  padding: 25px 30px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.summary-modal .modal-header h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 18px;
+  color: #ffffff;
+}
+
+.summary-content p {
+  margin: 6px 0;
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.summary-content strong {
+  color: #ffffff;
+  min-width: 120px;
+}
+
+.summary-modal .button-group {
+  margin-top: 15px;
+  text-align: right;
+}
+
+.summary-modal .btn-primary {
+  background-color: #38a169;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.summary-modal .btn-primary:hover {
+  background-color: #225e36;
+}
+
+/* ✅ Added scrollable log wrapper */
+.log-table-wrapper {
+    max-height: 400px; /* set scroll limit */
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+/* Sticky header for visibility */
+.log-table thead th {
+    position: sticky;
+    top: 0;
+    background: #66c49f;
+    z-index: 2;
+}
+
+/* Scrollbar styling */
+.log-table-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+
+.log-table-wrapper::-webkit-scrollbar-thumb {
+    background-color: #bbb;
+    border-radius: 4px;
+}
+
+/* -------------------------------
+   Admin Parking Log Design
+--------------------------------*/
+.admin-log-section {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  padding: 50px ;
+  margin-top: 30px;
+}
+
+.admin-log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #00b141;
+  padding-bottom: 15px;
+}
+
+.admin-header-left h2 {
+  font-size: 1.8rem;
+  color: #1f2937;
+  margin-bottom: 5px;
+}
+
+.admin-subtitle {
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.admin-search-bar {
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  width: 260px;
+  transition: all 0.2s ease;
+}
+
+.admin-search-bar:focus {
+  border-color: #00b141;
+  box-shadow: 0 0 4px rgba(0, 177, 65, 0.3);
+  outline: none;
+}
+
+/* Table */
+.admin-log-table-wrapper {
+  max-height: 430px;
+  overflow-y: auto;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.admin-log-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-log-table th {
+  position: sticky;
+  top: 0;
+  background-color: #00b141;
+  color: #fff;
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.admin-log-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.admin-log-table tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+.admin-log-table tr:hover {
+  background: #f1f5f9;
+}
+
+/* Status Badges */
+.status-badge {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.8rem;
+  display: inline-block;
+  text-align: center;
+  color: #fff;
+}
+
+.status-active {
+  background: #16a34a;
+}
+
+.status-exited {
+  background: #f87171;
+}
+
+/* Action Buttons */
+.btn-action {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s ease;
+  color: #fff;
+}
+
+.btn-action.view {
+  background: #2563eb;
+}
+
+.btn-action.view:hover {
+  background: #1d4ed8;
+}
+
+.btn-action.remove {
+  background: #dc2626;
+}
+
+.btn-action.remove:hover {
+  background: #b91c1c;
+}
+
+/* Scrollbar */
+.admin-log-table-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.admin-log-table-wrapper::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+.admin-log-table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}
+
+/* Style for the logo image on the login page */
+.logo {
+    display: block;
+    margin: 0;
+    max-width: 150px;
+    height: auto;
+    float: left;
+    border-radius: 5px; /* Reduced roundness */
+}
+
+.login-box {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 40px 30px;
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+
+.login-box h1 {
+    margin-bottom: 25px;
+    font-size: 1.9em;
+    color: #000000;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* Label styling */
+.login-box label {
+    display: block;
+    text-align: left;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95em;
+}
+
+/* Input fields */
+.login-box input[type="text"],
+.login-box input[type="password"] {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+    color: #000; /* ✅ text color */
+    background-color: #fff; /* ✅ ensures white background */
+    transition: all 0.2s ease;
+}
+
+.login-box input::placeholder {
+    color: #aaa; /* ✅ make placeholder visible but subtle */
+}
+
+.login-box input:focus {
+    outline: none;
+    border-color: #009e60;
+    box-shadow: 0 0 6px rgba(0, 158, 96, 0.4);
+}
+
+/* Login button */
+.login-box button {
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745;
+    color: #ffffff;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.login-box button:hover {
+    background-color: #218838;
+    transform: scale(1.03);
+}
+
+/* Small footer */
+.login-footer {
+    margin-top: 15px;
+    font-size: 0.85em;
+    color: #444;
+}

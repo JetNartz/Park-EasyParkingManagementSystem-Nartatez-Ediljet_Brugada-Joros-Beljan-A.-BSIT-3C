@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Parking Management Admin</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- Burger Menu -->
+    <div id="Admin-burgerMenu" class="Admin-burger-menu">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+    </div>
+
+    <!-- Dropdown Menu -->
+    <div id="Admin-dropdownMenu" class="Admin-dropdown-menu" >
+        <ul>
+            <li id="homeOption">Home</li>
+            <li id="logoutOption">Logout</li>
+        </ul>
+    </div>
+
+    <!-- Main Container -->
+    <div class="Admin-container">
+        <h1>Parking Management System - Admin</h1>
+
+        <!-- Parking Log Section -->
+<div id="Admin-parkingLogContainer" class="admin-log-section">
+  <div class="admin-log-header">
+    <div class="admin-header-left">
+      <h2>Parking Log Overview</h2>
+      <p class="admin-subtitle">Monitor, search, and manage all parking activity.</p>
+    </div>
+    <div class="admin-header-right">
+      <input type="text" id="Admin-searchInput" class="admin-search-bar" placeholder="Search by Plate or Vehicle">
+    </div>
+  </div>
+
+  <div class="admin-log-table-wrapper">
+    <table class="admin-log-table" id="Admin-logTable">
+      <thead>
+        <tr>
+          <th>Slot</th>
+          <th>Valid Sticker</th>
+          <th>Vehicle Type</th>
+          <th>Vehicle Name</th>
+          <th>Plate Number</th>
+          <th>Time In</th>
+          <th>Time Out</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="status-badge status-active">Parked</span></td>
+          <td>
+            <button class="btn-action view">View</button>
+            <button class="btn-action remove">Remove</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script src="script.js"></script>
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+  /* -------------------------------
+     🔸 ADMIN BURGER MENU FUNCTIONALITY
+  ----------------------------------*/
+  const burgerMenu = document.getElementById("Admin-burgerMenu");
+  const dropdownMenu = document.getElementById("Admin-dropdownMenu");
+  const homeOption = document.getElementById("homeOption");
+  const logoutOption = document.getElementById("logoutOption");
+  const adminContainer = document.querySelector(".Admin-container");
+  const logContainer = document.getElementById("Admin-parkingLogContainer");
+
+  // Toggle dropdown visibility
+  burgerMenu.addEventListener("click", () => {
+    dropdownMenu.style.display =
+      dropdownMenu.style.display === "block" ? "none" : "block";
+  });
+
+  // Show Home section
+  homeOption.addEventListener("click", () => {
+    dropdownMenu.style.display = "none";
+    adminContainer.style.display = "block";
+    logContainer.style.display = "block";
+  });
+
+  // Logout option
+  logoutOption.addEventListener("click", () => {
+    dropdownMenu.style.display = "none";
+    adminContainer.style.display = "none";
+    logContainer.style.display = "none";
+    window.location.href = "ParkingSystemLogIn.html";
+  });
+
+  /* -------------------------------
+     🔸 LOCALSTORAGE SYNC FOR ADMIN LOGS
+  ----------------------------------*/
+  const adminTableBody = document.querySelector("#Admin-logTable tbody");
+
+  function syncAdminLogs() {
+    const storedLogs = localStorage.getItem("parkingLogs");
+    if (storedLogs) {
+      adminTableBody.innerHTML = storedLogs;
+    } else {
+      adminTableBody.innerHTML =
+        "<tr><td colspan='9' style='text-align:center;'>No logs found</td></tr>";
+    }
+  }
+
+  // Initial load
+  syncAdminLogs();
+
+  // Listen for localStorage updates (sync with Staff)
+  window.addEventListener("storage", (event) => {
+    if (event.key === "parkingLogs") {
+      syncAdminLogs();
+    }
+  });
+
+  // Periodic refresh (every 5 seconds)
+  setInterval(syncAdminLogs, 5000);
+});
+</script>
+
+</body>
+</html>

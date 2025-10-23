@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parking System Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <img src="Olfu pic.jpg" alt="Parking System Logo" class="logo">
+    <div class="login-box">
+        <h1>Parking System Login</h1>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" placeholder="Enter username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" placeholder="Enter password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === 'staff' && password === 'staff1') {
+                window.location.href = 'ParkingStaffSystem.html';
+            } else if (username === 'admin' && password === 'admin1') {
+                window.location.href = 'ParkingAdminSystem.html';
+            } else {
+                alert('Invalid username or password.');
+            }
+        });
+    </script>
+</body>
+</html>
